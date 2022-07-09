@@ -8,7 +8,7 @@ Bitcoin is fungible because any Bitcoin can replace any other Bitcoin. Each NFT,
 One NFT cannot replace another. 
 */
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";   
-import "@openzeppelin/contracts/utils/Counters.sol"; 
+import "@openzeppelin/contracts/utils/Counters.sol"; // Counters: a simple way to get a counter that can only be incremented or decremented. Very useful for ID generation, counting contract activity, among others
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import "hardhat/console.sol";  // When running your contracts and tests on Hardhat Network you can print logging messages and contract variables calling console.log() from your Solidity code.
