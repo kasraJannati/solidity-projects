@@ -1,4 +1,5 @@
-require("@nomicfoundation/hardhat-toolbox");
+// require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-waffle");
 const fs = require("fs");
 const projectId = process.env.PROJECT_ID
 const privateKey = fs.readFileSync(".secret").toString()
@@ -18,5 +19,5 @@ module.exports = {
       accounts: [privateKey]
     }
   },
-  solidity: "0.8.9",
+  solidity: "0.8.12",
 };
