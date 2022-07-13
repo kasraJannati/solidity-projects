@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";   
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";   
 
 import "hardhat/console.sol";  
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol"; 
@@ -13,8 +13,13 @@ contract NFTMarket is ReentrancyGuard{
     using Counters for Counters.Counter;
     Counters.Counter private _itemIds; // unique id for every market place item
     Counters.Counter private _itemsSold; // how many items sold
+
     address payable owner; // to get profit 
-    uint listingPrice = 10 ether; // to get profit 
+    uint listingPrice = 0.025 ether; // to get profit 
+
+    constructor(){
+        owner = payable(msg.sender); // to get profit 
+    }
 
     struct MarketItem {
         uint itemId;   // unique identifier
@@ -23,6 +28,7 @@ contract NFTMarket is ReentrancyGuard{
         address payable seller; // address of seller
         address payable owner; // address of owner 
         uint256 price; // price of nft
+        bool sold;
     }
 
     mapping(uint256 => MarketItem) private idToMarketItem;
@@ -33,11 +39,12 @@ contract NFTMarket is ReentrancyGuard{
         uint256 indexed tokenId,
         address seller,
         address owner,
-        uint256 price
+        uint256 price,
+        bool sold
     );
 
-    constructor(){
-        owner = payable(msg.sender); // to get profit 
+    function getListingPrice() public view returns (uint256){
+        return listingPrice;
     }
 
     //createMarketItem function allows us to put items
@@ -53,7 +60,8 @@ contract NFTMarket is ReentrancyGuard{
             tokenId,
             payable(msg.sender),
             payable(address(0)),
-            price
+            price,
+            false
         );
         IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);  // From openZeppelin => transferFrom(address from, address to, uint256 tokenId)
         emit MarketCreated(
@@ -62,7 +70,8 @@ contract NFTMarket is ReentrancyGuard{
             tokenId,
             msg.sender,
             address(0),
-            price
+            price,
+            false
         );
     }
 
@@ -109,6 +118,28 @@ contract NFTMarket is ReentrancyGuard{
         MarketItem[] memory items = new MarketItem[](itemCount);
         for (uint i=0; i < totalItemCount; i++) {
             if(idToMarketItem[i + 1].owner == msg.sender){
+                uint currentId = idToMarketItem[i + 1].itemId;
+                MarketItem storage currentItem = idToMarketItem[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+
+    function fetchItemsCreated() public view returns (MarketItem[] memory){
+        uint totalItemCount =_itemIds.current();
+        uint itemCount = 0;
+        uint currentItem = 0;
+        for (uint i=0; i < totalItemCount; i++) {
+            if(idToMarketItem[i + 1].seller == msg.sender){
+                itemCount += 1;
+            }
+        }
+        MarketItem[] memory items = new MarketItem[](itemCount);
+        for (uint i=0; i < totalItemCount; i++) {
+            if(idToMarketItem[i + 1].seller == msg.sender){
                 uint currentId = idToMarketItem[i + 1].itemId;
                 MarketItem storage currentItem = idToMarketItem[currentId];
                 items[currentIndex] = currentItem;
