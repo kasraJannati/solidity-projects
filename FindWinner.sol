@@ -37,4 +37,11 @@ contract Bet{
     }
 
 
+
+    function selectWinner() public payable returns(address){
+        
+    }
+
+   
+
 }
