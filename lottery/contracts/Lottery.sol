@@ -4,7 +4,7 @@ pragma solidity ^0.8.12;
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
-contract Bet is VRFConsumerBaseV2{
+contract Lottery is VRFConsumerBaseV2{
 
     VRFCoordinatorV2Interface COORDINATOR;
     uint64 s_subscriptionId; // Your subscription ID.
@@ -29,10 +29,12 @@ contract Bet is VRFConsumerBaseV2{
     // address s_owner;
 
 
-    address mainWallet = 0xec001D225966Af2b4F0E7d5b79aa9455B2a1149a; //account 222
+    address public mainWallet = 0xec001D225966Af2b4F0E7d5b79aa9455B2a1149a; //account 222
     uint costTicket = 0.0000000000000001 ether; //100 Wei
     address owner;
     event LogBuyer(address accountBuyer);
+
+  
 
 
     mapping(address => uint) private balances;
