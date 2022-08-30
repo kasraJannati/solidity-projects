@@ -29,9 +29,16 @@ const onClickConnect = () => {
         console.log(`balance: ${balanceInEth} ETH`)
 
         
-  const daiContract = new ethers.Contract('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199', Lottery, provider);
-  const tokenName =  daiContract.balance();
-  console.log(daiContract)
+        const signer = provider.getSigner();
+
+
+        const daiContract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', Lottery.abi, signer);
+
+        console.log(daiContract)
+              
+
+        const tokenName =  daiContract.mainWallet();
+        console.log(tokenName)
 
       })
     }
