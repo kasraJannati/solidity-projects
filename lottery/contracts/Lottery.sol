@@ -28,14 +28,10 @@ contract Lottery is VRFConsumerBaseV2{
     uint256 public s_requestId;
     // address s_owner;
 
-
     address public mainWallet = 0xec001D225966Af2b4F0E7d5b79aa9455B2a1149a; //account 222
     uint costTicket = 0.0000000000000001 ether; //100 Wei
     address owner;
     event LogBuyer(address accountBuyer);
-
-  
-
 
     mapping(address => uint) private balances;
     event LogDeposit(address accountAaddress, uint amount);
