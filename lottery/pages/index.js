@@ -27,18 +27,20 @@ const onClickConnect = () => {
       provider.getBalance(accounts[0]).then((balance) => {
         const balanceInEth = ethers.utils.formatEther(balance)   // convert a currency unit from wei to ether
         console.log(`balance: ${balanceInEth} ETH`)
-
         
         const signer = provider.getSigner();
-
 
         const daiContract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', Lottery.abi, signer);
 
         console.log(daiContract)
-              
 
-        const tokenName =  daiContract.mainWallet();
-        console.log(tokenName)
+        const tokenName =  daiContract.costTicket().then((x) => {
+          console.log(ethers.utils.formatEther(x));
+        });
+
+        const y =  daiContract.mainWallet().then((x) => {
+          console.log(x);
+        });
 
       })
     }
@@ -46,19 +48,58 @@ const onClickConnect = () => {
   .catch((e)=>console.log(e))
 
 
-
-
-
 }
 
+const getBalance = () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  provider.send("eth_requestAccounts", []).then((accounts)=>{
+    provider.getBalance(accounts[0]).then((balance) => {
+      const balanceInEth = ethers.utils.formatEther(balance)   // convert a currency unit from wei to ether
+      console.log(`balance: ${balanceInEth} ETH`)
+    })
+  })
+}
+
+const getBalanceOwner = () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner();
+  const daiContract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', Lottery.abi, signer);
+  daiContract.balance().then((x) => {
+    console.log(ethers.utils.formatEther(x));
+  });
+}
+
+const buyTickets = () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner();
+  const daiContract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', Lottery.abi, signer);
+  console.log(daiContract.buyTicket());
+}
+
+const deposit = () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner();
+  const daiContract = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', Lottery.abi, signer);
+
+  provider.send("eth_requestAccounts", []).then((accounts)=>{
+      console.log(accounts[0])
+      daiContract.deposit().transfer({from: accounts[0], value: 0.000001})
+  })
+  
+}
 
 export default function Home() {
-
-
-  
   return (
     <div className={styles.container}>
       <button type="button" onClick={onClickConnect}>Login to Metamask</button>
+      <br />
+      <button type="button" onClick={deposit}>Deposit</button>
+      <br />
+      <button type="button" onClick={getBalance}>Balance</button>     
+      <br />
+      <button type="button" onClick={getBalanceOwner}>getBalanceOwner</button>     
+      <br />
+      <button type="button" onClick={buyTickets}>Buy Ticket</button>
     </div>
   )
 }

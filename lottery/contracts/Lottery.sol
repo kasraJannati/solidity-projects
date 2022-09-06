@@ -30,7 +30,7 @@ contract Lottery is VRFConsumerBaseV2{
 
     address public mainWallet = 0xec001D225966Af2b4F0E7d5b79aa9455B2a1149a; //account 222
     uint public costTicket = 0.0000000000000001 ether; //100 Wei
-    address owner;
+    address private owner;
     event LogBuyer(address accountBuyer);
 
     mapping(address => uint) private balances;
@@ -50,14 +50,14 @@ contract Lottery is VRFConsumerBaseV2{
         emit LogDeposit(msg.sender, msg.value);
         return balances[msg.sender];
     }  
-    function balance() public view returns(uint){
-        return balances[msg.sender];
+    function balance() public view returns(uint256){
+        return owner.balance;
     }  
 
     function buyTicket() public payable returns(address){
         require(costTicket <= balances[msg.sender], "Insufficient funds");
         balances[msg.sender] -= costTicket;
-        payable(mainWallet).transfer(costTicket);
+        payable(msg.sender).transfer(costTicket);
         emit LogBuyer(msg.sender);
         return msg.sender;
     }
