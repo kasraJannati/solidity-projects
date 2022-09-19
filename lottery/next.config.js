@@ -7,7 +7,6 @@ const nextConfig = {
 module.exports = nextConfig
 
 
-//npm run dev
 //npx hardhat compile
 //npm run dev
 //npx hardhat node
