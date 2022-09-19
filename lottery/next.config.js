@@ -5,8 +5,3 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
-
-
-//npx hardhat compile
-//npm run dev
-//npx hardhat node
